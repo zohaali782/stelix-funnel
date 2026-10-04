@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stelix AI Creator Guide</title>
+<meta name="description" content="Build your own AI influencer with CapturesAI. The free step-by-step guide by Stelix.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap">
+<style>
+  /* Stelix palette: burgundy + gold. One deliberate look, painted explicitly in every section. */
+  :root {
+    color-scheme: light;
+    --wine-950: #2C0710;
+    --wine-900: #3B0A16;
+    --wine-700: #5C1224;
+    --wine-500: #7D2236;
+    --gold: #C8A04F;
+    --gold-soft: #E6CD8C;
+    --gold-line: rgba(200, 160, 79, .38);
+    --paper: #FAF4F1;
+    --paper-2: #F3E8E3;
+    --ink: #2A1418;
+    --muted: #6F5559;
+    --rule: #E3D2CB;
+    --display: "Poppins", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --body: "Poppins", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 16.5px/1.7 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: 20px; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.15; letter-spacing: -.015em; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  .eyebrow {
+    font: 600 12px/1 var(--body); letter-spacing: .18em; text-transform: uppercase;
+  }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    font: 600 15px/1 var(--body); letter-spacing: .02em; text-decoration: none;
+    padding: 16px 26px; border-radius: 2px; border: 1px solid transparent; cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s;
+  }
+  .btn-gold { background: var(--gold); color: var(--wine-950); }
+  .btn-gold:hover { background: var(--gold-soft); }
+  .btn-line { border-color: var(--gold-line); color: var(--gold-soft); background: transparent; }
+  .btn-line:hover { border-color: var(--gold); color: #fff; }
+  .btn-wine { background: var(--wine-700); color: var(--paper); }
+  .btn-wine:hover { background: var(--wine-500); }
+
+  /* ---------- Top bar ---------- */
+  .top { background: var(--wine-950); color: var(--gold-soft); border-bottom: 1px solid var(--gold-line); }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+  .brand { display: flex; align-items: baseline; gap: 10px; text-decoration: none; }
+  .brand b { font: 700 24px/1 var(--display); color: var(--gold-soft); letter-spacing: .01em; }
+  .brand span { font-size: 13px; color: rgba(230, 205, 140, .7); }
+  .top .btn { padding: 11px 18px; font-size: 14px; }
+
+  /* ---------- Hero ---------- */
+  .hero { background: var(--wine-900); color: #F4E6E2; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(60% 70% at 78% 40%, rgba(125, 34, 54, .75), transparent 70%);
+  }
+  .hero .wrap {
+    position: relative; display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px;
+    align-items: center; padding-block: 72px 80px;
+  }
+  .hero .eyebrow { color: var(--gold); display: flex; align-items: center; gap: 12px; }
+  .hero .eyebrow::before { content: ""; width: 36px; height: 1px; background: var(--gold); }
+  .hero h1 { font-size: clamp(36px, 5vw, 60px); margin-top: 22px; color: #FBF1EC; letter-spacing: -.02em; }
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(100deg, #F1DDA4 10%, #C8A04F 55%, #E6CD8C 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero .lede { font-size: 17.5px; max-width: 34em; margin-top: 24px; color: #E9D6D1; }
+  .hero .lede strong { color: var(--gold-soft); font-weight: 600; }
+  .hero .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+  .facts {
+    display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 40px; padding-top: 22px;
+    border-top: 1px solid var(--gold-line); font-size: 14px; color: #D9C2BC;
+  }
+  .facts span::before { content: "◆"; color: var(--gold); font-size: 9px; margin-right: 9px; position: relative; top: -2px; }
+
+  .portrait { position: relative; justify-self: center; width: min(100%, 420px); }
+  .portrait .frame {
+    position: relative; border: 1px solid var(--gold); padding: 12px;
+  }
+  .portrait .frame::after {
+    content: ""; position: absolute; inset: -9px 9px 9px -9px; border: 1px solid var(--gold-line); pointer-events: none;
+  }
+  .portrait img { width: 100%; aspect-ratio: 4 / 5.4; object-fit: cover; object-position: 50% 22%; }
+  .tag {
+    position: absolute; right: -14px; bottom: 36px; background: var(--gold); color: var(--wine-950);
+    padding: 10px 14px; font: 600 12px/1.25 var(--body); letter-spacing: .12em; text-transform: uppercase;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  }
+  .tag small { display: block; font: 500 13px/1.3 var(--display); letter-spacing: 0; text-transform: none; }
+  .portrait figcaption { margin-top: 18px; font-size: 13px; color: #CDB3AD; text-align: center; letter-spacing: .04em; }
+
+  /* ---------- Why section ---------- */
+  .section { padding-block: 96px; }
+  .head { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; margin-bottom: 56px; }
+  .head .eyebrow { color: var(--wine-500); }
+  .head h2 { font-size: clamp(28px, 3.6vw, 42px); margin-top: 14px; color: var(--wine-900); }
+  .head h2 em { font-style: italic; color: var(--wine-500); }
+  .head p { color: var(--muted); max-width: 32em; }
+  .why { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule); }
+  .why article { padding: 30px 28px 34px 0; border-bottom: 1px solid var(--rule); }
+  .why article:not(:nth-child(3n+1)) { padding-left: 28px; border-left: 1px solid var(--rule); }
+  .why h3 { font-size: 19px; color: var(--wine-900); }
+  .why p { margin-top: 10px; color: var(--muted); font-size: 16px; }
+  .why .mark { display: block; width: 22px; height: 1px; background: var(--gold); margin-bottom: 18px; }
+
+  /* ---------- Contents + Unlock ---------- */
+  .inside { background: var(--paper-2); }
+  .inside .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: start; }
+  .toc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); counter-reset: ch; }
+  .toc li { display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--rule); }
+  .toc .n { font: 700 26px/1 var(--display); color: var(--gold); font-variant-numeric: lining-nums; }
+  .toc h3 { font-size: 18px; color: var(--wine-900); }
+  .toc p { font-size: 15px; color: var(--muted); margin-top: 4px; }
+  .toc .t { font-size: 13px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .toc a { text-decoration: none; }
+  body.unlocked .toc a:hover h3 { color: var(--wine-500); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
+
+  .unlock {
+    background: var(--wine-900); color: #F1E2DD; padding: 40px 36px; position: sticky; top: 24px;
+    border: 1px solid var(--wine-700); outline: 1px solid var(--gold-line); outline-offset: -8px;
+  }
+  .unlock .eyebrow { color: var(--gold); }
+  .unlock h2 { font-size: 27px; margin-top: 12px; color: #FBF1EC; }
+  .unlock h2 em { color: var(--gold-soft); }
+  .unlock > p, .done > p:not(.eyebrow) { margin-top: 12px; font-size: 15px; color: #D9C2BC; }
+  .form { display: grid; gap: 14px; margin-top: 26px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--gold-soft); margin-bottom: 6px; }
+  .field label span { font-weight: 400; color: #BFA39D; }
+  .field input {
+    width: 100%; font: 400 16px/1.2 var(--body); color: #FBF1EC; background: var(--wine-950);
+    border: 1px solid rgba(230, 205, 140, .28); border-radius: 2px; padding: 14px 14px;
+  }
+  .field input::placeholder { color: #9C7D78; }
+  .field input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200, 160, 79, .22); }
+  .form .btn { width: 100%; margin-top: 6px; }
+  .form .err { font-size: 14px; color: #F3B7A6; min-height: 0; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .fine { font-size: 12.5px; color: #B99D97; margin-top: 4px; }
+  .done h2 { font-size: 26px; }
+  .done .btn { margin-top: 22px; width: 100%; }
+
+  /* ---------- Guide ---------- */
+  .guide { background: var(--paper); border-top: 1px solid var(--rule); }
+  .guide .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 64px; padding-block: 88px 40px; }
+  .gnav { position: sticky; top: 24px; align-self: start; font-size: 14px; }
+  .gnav .eyebrow { color: var(--wine-500); display: block; margin-bottom: 16px; }
+  .gnav ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .gnav a { display: grid; grid-template-columns: 26px 1fr; padding: 7px 0; text-decoration: none; color: var(--muted); }
+  .gnav a:hover { color: var(--wine-700); }
+  .gnav a b { font: 700 14px/1.6 var(--display); color: var(--gold); }
+  .gintro { max-width: 40em; margin-bottom: 40px; }
+  .gintro h2 { font-size: clamp(30px, 4vw, 46px); color: var(--wine-900); margin-top: 14px; }
+  .gintro .eyebrow { color: var(--wine-500); }
+  .gintro p { margin-top: 18px; font-size: 17.5px; color: var(--muted); }
+  .chapter { padding-block: 56px; border-top: 1px solid var(--rule); max-width: 44em; scroll-margin-top: 16px; }
+  .chapter .num { font: 600 13px/1 var(--display); color: var(--gold); letter-spacing: .16em; text-transform: uppercase; }
+  .chapter h2 { font-size: clamp(26px, 3vw, 34px); color: var(--wine-900); margin-top: 10px; }
+  .chapter > p, .chapter .prose > p { margin-top: 18px; }
+  .chapter h3 { font-size: 19px; color: var(--wine-700); margin-top: 36px; }
+  .chapter ul, .chapter ol.steps { margin: 16px 0 0; padding-left: 22px; }
+  .chapter li { margin-top: 8px; }
+  .chapter li::marker { color: var(--gold); }
+  .chapter strong { color: var(--wine-900); font-weight: 600; }
+  ol.steps { counter-reset: s; list-style: none; padding-left: 0 !important; }
+  ol.steps > li { counter-increment: s; position: relative; padding-left: 44px; margin-top: 18px; }
+  ol.steps > li::before {
+    content: counter(s); position: absolute; left: 0; top: 1px; width: 28px; height: 28px; border: 1px solid var(--gold);
+    border-radius: 50%; display: grid; place-items: center; font: 600 13px/1 var(--body); color: var(--wine-700);
+  }
+  .tool { font-weight: 600; color: var(--wine-700); background: #F4E5DF; padding: 1px 7px; border-radius: 2px; white-space: nowrap; font-size: .92em; }
+
+  .tip { margin-top: 28px; padding: 18px 0 18px 22px; border-left: 2px solid var(--gold); }
+  .tip .eyebrow { color: var(--wine-500); font-size: 11px; }
+  .tip p { margin-top: 6px; font-weight: 500; font-size: 17px; line-height: 1.6; color: var(--wine-900); }
+
+  /* Casting sheet */
+  .sheet { margin-top: 26px; border: 1px solid var(--rule); background: #fff; }
+  .sheet .sh { display: flex; justify-content: space-between; gap: 12px; padding: 12px 18px; background: var(--wine-900); color: var(--gold-soft); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+  .sheet dl { margin: 0; display: grid; grid-template-columns: 170px 1fr; }
+  .sheet dt, .sheet dd { margin: 0; padding: 12px 18px; border-top: 1px solid var(--rule); font-size: 15.5px; }
+  .sheet dt { color: var(--muted); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; padding-top: 14px; }
+  .sheet dd em { color: var(--muted); }
+
+  /* Reference face */
+  .ref { display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: center; margin-top: 28px; }
+  .ref img { border: 1px solid var(--gold); padding: 6px; background: #fff; aspect-ratio: 1; object-fit: cover; }
+  .ref p { font-size: 15.5px; color: var(--muted); }
+  .ref p b { display: block; font: 600 18px/1.3 var(--display); color: var(--wine-900); margin-bottom: 6px; }
+
+  /* Prompt block */
+  .prompt { margin-top: 22px; background: var(--wine-950); color: #F1E2DD; border-radius: 2px; overflow: hidden; }
+  .prompt .ph { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid rgba(230, 205, 140, .18); }
+  .prompt .ph span { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+  .copy { font: 600 13px/1 var(--body); color: var(--wine-950); background: var(--gold); border: 0; padding: 8px 12px; border-radius: 2px; cursor: pointer; }
+  .copy:hover { background: var(--gold-soft); }
+  .prompt p { padding: 16px 18px 18px; font: 400 15px/1.75 var(--body); margin: 0 !important; }
+
+  /* Tables */
+  .tbl { margin-top: 22px; overflow-x: auto; border: 1px solid var(--rule); background: #fff; }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 15px; }
+  th, td { text-align: left; padding: 12px 16px; border-top: 1px solid var(--rule); vertical-align: top; }
+  thead th { border-top: 0; background: var(--wine-900); color: var(--gold-soft); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+  tbody th { font-weight: 600; color: var(--wine-900); white-space: nowrap; }
+  td { color: var(--muted); }
+
+  .mix { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 24px; border-top: 1px solid var(--rule); }
+  .mix div { padding: 20px 20px 22px 0; border-bottom: 1px solid var(--rule); }
+  .mix div:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--rule); }
+  .mix .eyebrow { color: var(--gold); font-size: 11px; }
+  .mix h4 { margin: 8px 0 0; font: 600 18px/1.3 var(--display); color: var(--wine-900); }
+  .mix p { margin-top: 6px !important; font-size: 15px; color: var(--muted); }
+
+  .hooks { list-style: none; padding: 0 !important; margin-top: 18px; }
+  .hooks li { font: 500 17.5px/1.5 var(--display); color: var(--wine-900); padding: 12px 0; border-bottom: 1px dashed var(--rule); margin: 0; }
+  .hooks li::before { content: "“"; color: var(--gold); margin-right: 2px; }
+  .hooks li::after { content: "”"; color: var(--gold); }
+
+  .closing { margin-top: 20px; padding: 34px 32px; background: var(--wine-900); color: #F1E2DD; max-width: 44em; }
+  .closing h2 { font-size: 27px; color: #FBF1EC; }
+  .closing h2 em { color: var(--gold-soft); }
+  .closing p { margin-top: 12px; color: #D9C2BC; }
+  .closing .btn { margin-top: 22px; }
+
+  .locked-note { padding-block: 64px; text-align: center; color: var(--muted); }
+  .locked-note h2 { font-size: 26px; color: var(--wine-900); }
+  .locked-note p { margin: 10px auto 22px; max-width: 30em; }
+
+  /* ---------- Lookbook strip ---------- */
+  .strip { background: var(--wine-950); border-bottom: 1px solid var(--gold-line); padding-block: 30px 34px; overflow: hidden; }
+  .strip p { text-align: center; color: var(--gold-soft); font-size: 12.5px; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; margin: 0 0 20px; padding-inline: 16px; }
+  .strip p b { color: #FBF1EC; font-weight: 600; }
+  .track { display: flex; width: max-content; animation: slide 70s linear infinite; }
+  .strip:hover .track { animation-play-state: paused; }
+  .track img { width: 170px; height: 230px; object-fit: cover; margin-right: 14px; border: 1px solid var(--gold-line); }
+  @keyframes slide { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .track { animation: none; } .strip { overflow-x: auto; } }
+
+  /* ---------- Guide media ---------- */
+  .chapter figure { margin: 0; }
+  .chapter figcaption { margin-top: 10px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  .chapter figcaption b { color: var(--wine-900); font-weight: 600; }
+  .shot img, .clip video { width: 100%; height: auto; display: block; border: 1px solid var(--rule); background: var(--paper-2); }
+  .clip video { aspect-ratio: 9 / 16; object-fit: cover; }
+  .wide { margin-top: 28px; }
+  .intro-split { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 32px; align-items: start; }
+  .intro-split > div > p + p { margin-top: 18px; }
+  .intro-split .shot img { aspect-ratio: 2 / 3; object-fit: cover; }
+  .places { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
+  .places img { aspect-ratio: 4 / 5; object-fit: cover; }
+  .places + .cap { margin-top: 10px; font-size: 13.5px; color: var(--muted); }
+  .shoot { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 32px; align-items: start; margin-top: 8px; }
+  .reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 26px; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+  .pair .shot img { aspect-ratio: 9 / 16; object-fit: cover; }
+  .mix .shot img, .mix .clip video { aspect-ratio: 1; object-fit: cover; object-position: 50% 20%; margin-bottom: 14px; }
+
+  /* ---------- Testimonials ---------- */
+  .proof { background: var(--wine-950); color: #F1E2DD; }
+  .proof .head .eyebrow { color: var(--gold); }
+  .proof .head h2 { color: #FBF1EC; }
+  .proof .head h2 em { color: var(--gold-soft); }
+  .proof .head p { color: #CDB3AD; }
+  .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .shots figure { margin: 0; }
+  .shots .slot {
+    aspect-ratio: 9 / 14; border: 1px dashed rgba(230, 205, 140, .45); display: grid; place-items: center;
+    text-align: center; padding: 20px; color: #BFA39D; font-size: 14px; background: rgba(92, 18, 36, .35);
+  }
+  .shots .slot b { display: block; font: 600 17px/1.3 var(--display); color: var(--gold-soft); margin-bottom: 6px; }
+  .shots img { width: 100%; border: 1px solid var(--gold-line); }
+  .shots figcaption { margin-top: 12px; font-size: 14px; color: #CDB3AD; }
+
+  .rev { margin: 0; }
+  .rev blockquote { margin: 0; color: #F1E2DD; font-size: 16px; line-height: 1.7; }
+  .rev blockquote::before { content: "“"; display: block; font: 700 54px/0.6 var(--display); color: var(--gold); margin-bottom: 14px; }
+  .rev figcaption { margin-top: 18px; display: grid; gap: 2px; font-size: 14px; }
+  .rev figcaption b { color: #FBF1EC; font-weight: 600; font-size: 15px; }
+  .rev figcaption span:not(.stars) { color: #BFA39D; }
+  .stars { color: var(--gold); letter-spacing: .14em; font-size: 14px; margin-bottom: 6px; }
+  .feats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px; padding-bottom: 48px; border-bottom: 1px solid var(--gold-line); }
+  .rev-feature blockquote { font-size: clamp(18px, 1.9vw, 22px); line-height: 1.5; font-weight: 500; color: #FBF1EC; }
+  .revs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .revs .rev { padding: 36px 32px 36px 0; border-bottom: 1px solid var(--gold-line); }
+  .revs .rev:not(:nth-child(3n+1)) { padding-left: 32px; border-left: 1px solid var(--gold-line); }
+  .revs .rev:nth-last-child(-n+3) { border-bottom: 0; }
+  @media (max-width: 960px) {
+    .revs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .revs .rev, .revs .rev:not(:nth-child(3n+1)) { padding: 30px 24px 30px 0; border-left: 0; }
+    .revs .rev:nth-child(even) { padding-left: 24px; border-left: 1px solid var(--gold-line); }
+  }
+  @media (max-width: 960px) { .revs .rev:nth-last-child(3) { border-bottom: 1px solid var(--gold-line); } }
+  @media (max-width: 620px) {
+    .feats { grid-template-columns: 1fr; gap: 36px; }
+    .revs { grid-template-columns: 1fr; }
+    .revs .rev:nth-last-child(-n+3) { border-bottom: 1px solid var(--gold-line); }
+    .revs .rev:last-child { border-bottom: 0; }
+    .revs .rev:nth-child(even) { padding-left: 0; border-left: 0; }
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq { max-width: 820px; }
+  .faq details { border-bottom: 1px solid var(--rule); }
+  .faq details:first-of-type { border-top: 1px solid var(--rule); }
+  .faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 20px; padding: 22px 0; font: 600 18px/1.4 var(--display); color: var(--wine-900); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font: 400 26px/1 var(--body); color: var(--gold); transition: transform .2s; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { padding-bottom: 22px; color: var(--muted); max-width: 40em; }
+
+  /* ---------- Final CTA + footer ---------- */
+  .final { background: var(--wine-900); color: #F1E2DD; text-align: center; }
+  .final .wrap { padding-block: 88px; }
+  .final h2 { font-size: clamp(30px, 4.2vw, 48px); color: #FBF1EC; }
+  .final h2 em { color: var(--gold-soft); }
+  .final p { margin: 18px auto 0; max-width: 34em; color: #D9C2BC; }
+  .final .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 32px; }
+  footer { background: var(--wine-950); color: #BFA39D; font-size: 13px; border-top: 1px solid var(--gold-line); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-block: 24px; }
+  footer a { color: var(--gold-soft); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 960px) {
+    .hero .wrap, .head, .inside .grid { grid-template-columns: 1fr; }
+    .hero .wrap { gap: 48px; padding-block: 56px 64px; }
+    .head { gap: 16px; align-items: start; }
+    .why { grid-template-columns: 1fr 1fr; }
+    .why article, .why article:not(:nth-child(3n+1)) { padding: 26px 24px 28px 0; border-left: 0; }
+    .why article:nth-child(even) { padding-left: 24px; border-left: 1px solid var(--rule); }
+    .unlock { position: static; }
+    .guide .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .gnav { display: none; }
+    .shots { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  }
+  @media (max-width: 620px) {
+    body { font-size: 16.5px; }
+    .section { padding-block: 68px; }
+    .top .brand span { display: none; }
+    .why { grid-template-columns: 1fr; }
+    .why article:nth-child(even) { padding-left: 0; border-left: 0; }
+    .toc li { grid-template-columns: 44px 1fr; }
+    .toc .t { display: none; }
+    .unlock { padding: 30px 22px; }
+    .sheet dl { grid-template-columns: 1fr; }
+    .sheet dd { border-top: 0; padding-top: 0; }
+    .ref { grid-template-columns: 1fr; }
+    .ref img { width: 160px; }
+    .mix { grid-template-columns: 1fr; }
+    .mix div:nth-child(even) { padding-left: 0; border-left: 0; }
+    .shots { grid-template-columns: 1fr; max-width: 360px; margin-inline: auto; }
+    .intro-split, .shoot { grid-template-columns: 1fr; }
+    .intro-split .shot, .shoot .shot { max-width: 300px; }
+    .places { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .reels { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 64%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+    .reels figure { scroll-snap-align: start; }
+    .track img { width: 130px; height: 176px; margin-right: 10px; }
+    .tag { right: -6px; }
+    .closing { padding: 28px 22px; }
+  }
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><b>Stelix</b><span>AI creator · made with CapturesAI</span></a>
+    <a class="btn btn-gold" href="#unlock">Get the free guide</a>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">The free AI Influencer Guide</p>
+        <h1>I'm not real. <em>You can build one like me</em> this week.</h1>
+        <p class="lede">I'm Stelix, an AI creator made with <strong>CapturesAI</strong>. This free guide walks you through the exact workflow behind me: designing the face, keeping it consistent, making it move, and turning followers into brand deals. No camera and no studio needed.</p>
+        <div class="actions">
+          <a class="btn btn-gold" href="#unlock">Unlock the free guide</a>
+          <a class="btn btn-line" href="https://capturesai.com" target="_blank" rel="noopener">Try CapturesAI</a>
+        </div>
+        <div class="facts">
+          <span>7 short chapters</span>
+          <span>Copy-ready prompts</span>
+          <span>Read it right here, no PDF</span>
+        </div>
+      </div>
+      <figure class="portrait">
+        <div class="frame">
+          <img src="images/stelix-hero.jpg" alt="Stelix, an AI-generated creator with long copper hair and green eyes, wearing a white off-shoulder blouse and pearls" width="900" height="1600">
+        </div>
+        <div class="tag">100% AI<small>no photoshoot</small></div>
+        <figcaption>Stelix · AI-generated character · made in CapturesAI</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- LOOKBOOK STRIP -->
+  <section class="strip" aria-label="Stelix in different looks">
+    <p>One AI face · <b>endless looks</b> · no camera, ever</p>
+    <div class="track"><img src="media/s-look-car.jpg" alt="" width="340" height="460"><img src="media/s-look-heart.jpg" alt="" width="340" height="460"><img src="media/s-look-stripes.jpg" alt="" width="340" height="460"><img src="media/s-look-mirror.jpg" alt="" width="340" height="460"><img src="media/s-look-sunset.jpg" alt="" width="340" height="460"><img src="media/s-look-coffee2.jpg" alt="" width="340" height="460"><img src="media/s-look-sofa.jpg" alt="" width="340" height="460"><img src="media/s-look-sofa2.jpg" alt="" width="340" height="460"><img src="media/s-look-carwindow.jpg" alt="" width="340" height="460"><img src="media/s-look-bedroom-white.jpg" alt="" width="340" height="460"><img src="media/s-look-bedroom-floral.jpg" alt="" width="340" height="460"><img src="media/s-look-butterfly.jpg" alt="" width="340" height="460"><img src="media/s-look-bedroom.jpg" alt="" width="340" height="460"><img src="media/s-look-car.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-heart.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-stripes.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-mirror.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-sunset.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-coffee2.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-sofa.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-sofa2.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-carwindow.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-bedroom-white.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-bedroom-floral.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-butterfly.jpg" alt="" aria-hidden="true" width="340" height="460"><img src="media/s-look-bedroom.jpg" alt="" aria-hidden="true" width="340" height="460"></div>
+  </section>
+
+  <!-- WHY -->
+  <section class="section">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <p class="eyebrow">Why build an AI influencer</p>
+          <h2>A creator who never <em>runs out of content</em></h2>
+        </div>
+        <p>Real creators burn out on filming, travel and editing. An AI creator shows up every day with the same face, in any city or outfit you want. Here is what that gives you.</p>
+      </div>
+      <div class="why">
+        <article><span class="mark"></span><h3>No camera, ever</h3><p>You never film yourself or show your face. Your character does the posting, you do the planning.</p></article>
+        <article><span class="mark"></span><h3>Post every single day</h3><p>A week of photos and videos takes one sitting. Consistency is what the algorithm rewards.</p></article>
+        <article><span class="mark"></span><h3>Anywhere, any look</h3><p>Paris in the morning, a beach at sunset, a studio at night. Change the scene without booking a flight.</p></article>
+        <article><span class="mark"></span><h3>One face brands can book</h3><p>A consistent character becomes a recognisable brand, which is what sponsors pay for.</p></article>
+        <article><span class="mark"></span><h3>No model or studio fees</h3><p>No photographers, locations or reshoots. You pay for a tool, not a production crew.</p></article>
+        <article><span class="mark"></span><h3>You own the content</h3><p>CapturesAI gives you full commercial rights, so you can use what you make for paid brand work.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENTS + UNLOCK -->
+  <section class="section inside" id="contents">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <p class="eyebrow">Inside the guide</p>
+          <h2>From first face to <em>first brand deal</em></h2>
+        </div>
+        <p>Seven chapters, in the order you should do them. Read it in about half an hour, then build along with it.</p>
+      </div>
+      <div class="grid">
+        <ol class="toc">
+          <li><span class="n">1</span><a href="#ch1"><h3>Decide who she is</h3><p>Niche, persona and the three traits that never change.</p></a><span class="t">4 min</span></li>
+          <li><span class="n">2</span><a href="#ch2"><h3>Create the face</h3><p>Your master reference in AI Influencer Studio, with my prompt.</p></a><span class="t">5 min</span></li>
+          <li><span class="n">3</span><a href="#ch3"><h3>Build her world</h3><p>A month of photos in one session, new cities and outfits.</p></a><span class="t">4 min</span></li>
+          <li><span class="n">4</span><a href="#ch4"><h3>Make her move</h3><p>Motion Control, talking videos and 4K upscaling.</p></a><span class="t">5 min</span></li>
+          <li><span class="n">5</span><a href="#ch5"><h3>Post what grows</h3><p>The four content types, a weekly rhythm and hooks.</p></a><span class="t">5 min</span></li>
+          <li><span class="n">6</span><a href="#ch6"><h3>Stay on Instagram's good side</h3><p>AI labels, disclosure and what gets accounts restricted.</p></a><span class="t">3 min</span></li>
+          <li><span class="n">7</span><a href="#ch7"><h3>Turn attention into income</h3><p>Brand deals, affiliate links, digital products and DMs.</p></a><span class="t">4 min</span></li>
+        </ol>
+
+        <aside class="unlock" id="unlock" aria-live="polite">
+          <div id="formView">
+            <p class="eyebrow">Free · opens instantly</p>
+            <h2>Unlock the <em>full guide</em></h2>
+            <p>Tell me where to reach you and the guide opens right here on this page.</p>
+            <form class="form" id="leadForm" novalidate>
+              <div class="field"><label for="name">First name</label><input id="name" name="name" type="text" autocomplete="given-name" placeholder="Your name" required></div>
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+              <div class="field"><label for="phone">WhatsApp / phone <span>(optional)</span></label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+1 555 000 0000"></div>
+              <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+              <p class="err" id="formErr" hidden></p>
+              <button class="btn btn-gold" type="submit" id="submitBtn">Open my guide</button>
+              <p class="fine">No spam. Unsubscribe anytime.</p>
+            </form>
+          </div>
+          <div class="done" id="doneView" hidden>
+            <p class="eyebrow">You're in</p>
+            <h2 id="doneTitle">Welcome in.</h2>
+            <p>Your guide is open below. Start with chapter 1 and build as you read.</p>
+            <a class="btn btn-gold" href="#guide">Start reading</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUIDE (locked until the form is sent) -->
+  <section class="guide" id="guide">
+    <div class="wrap locked-note" id="lockedNote">
+      <h2>The guide opens once you sign up</h2>
+      <p>It's free. Add your name and email above and all seven chapters appear right here.</p>
+      <a class="btn btn-wine" href="#unlock">Unlock the guide</a>
+    </div>
+
+    <div class="wrap layout" id="guideBody" hidden>
+      <nav class="gnav" aria-label="Chapters">
+        <span class="eyebrow">Chapters</span>
+        <ol>
+          <li><a href="#ch1"><b>1</b>Decide who she is</a></li>
+          <li><a href="#ch2"><b>2</b>Create the face</a></li>
+          <li><a href="#ch3"><b>3</b>Build her world</a></li>
+          <li><a href="#ch4"><b>4</b>Make her move</a></li>
+          <li><a href="#ch5"><b>5</b>Post what grows</a></li>
+          <li><a href="#ch6"><b>6</b>Instagram's good side</a></li>
+          <li><a href="#ch7"><b>7</b>Income</a></li>
+        </ol>
+      </nav>
+
+      <div>
+        <div class="gintro">
+          <p class="eyebrow">The AI Influencer Guide · by Stelix</p>
+          <h2>How to build your own AI influencer with CapturesAI</h2>
+          <p>Everything here is what I actually do. Open <a href="https://capturesai.com" target="_blank" rel="noopener">capturesai.com</a> in another tab and build along. Your first 2 creations are free and you don't need a card.</p>
+        </div>
+
+        <!-- CH 1 -->
+        <article class="chapter" id="ch1">
+          <p class="num">Chapter 1</p>
+          <h2>Decide who she is</h2>
+          <div class="intro-split">
+            <div>
+              <p>Before you generate a single image, write your character down. Accounts that grow have a clear point of view. People follow a personality and a vibe, and a pretty face alone is not enough.</p>
+              <p>Fill in a casting sheet like the one below. Keep it open every time you create, so every post feels like the same person.</p>
+              <p>Give her a world too. My room has the same photo wall, candles and my name in neon, so you know it's me before you see my face.</p>
+            </div>
+            <figure class="shot"><img src="media/stelix-neon.jpg" alt="Stelix in her bedroom with a neon sign that reads Stelix" loading="lazy"><figcaption><b>Her space.</b> The neon sign and photo wall repeat across posts.</figcaption></figure>
+          </div>
+          <div class="sheet">
+            <div class="sh"><span>Casting sheet</span><span>Example: Stelix</span></div>
+            <dl>
+              <dt>Name</dt><dd>Short, easy to spell, easy to search. Check the Instagram handle is free.</dd>
+              <dt>Fixed look</dt><dd>Copper hair, green eyes, freckles. <em>Three traits that never change.</em></dd>
+              <dt>Signature item</dt><dd>A small gold coin pendant. <em>One small detail people start to recognise.</em></dd>
+              <dt>Niche</dt><dd>Soft-glam lifestyle, plus behind-the-scenes of AI creation.</dd>
+              <dt>3 content pillars</dt><dd>Looks and outfits · Places and moments · How I'm made</dd>
+              <dt>Voice</dt><dd>Warm, short sentences, a little playful. Writes captions like a friend texting.</dd>
+              <dt>Made for</dt><dd>Creators and small brands who want content without filming themselves.</dd>
+            </dl>
+          </div>
+          <div class="tip"><p class="eyebrow">Stelix tip</p><p>Pick a niche that sells something. Beauty, fashion, travel, fitness and tech all have brands with budgets looking for creators.</p></div>
+        </article>
+
+        <!-- CH 2 -->
+        <article class="chapter" id="ch2">
+          <p class="num">Chapter 2</p>
+          <h2>Create the face</h2>
+          <p>The face is your whole brand, so spend the most time here. The goal is one <strong>master reference image</strong> that you reuse for everything after this.</p>
+          <ol class="steps">
+            <li>Go to <a href="https://capturesai.com" target="_blank" rel="noopener">capturesai.com</a> and create a free account.</li>
+            <li>Open <span class="tool">AI Influencer Studio</span>. This is where you design your virtual creator.</li>
+            <li>Describe the face in detail. Use your casting sheet. If you're stuck, <span class="tool">Prompt Writer</span> will turn a rough idea into a full prompt.</li>
+            <li>Generate a few versions and compare them side by side. Choose the one you'd happily see every day for a year.</li>
+            <li>Download that image and save it as your master reference. Use it as the starting point for every photo and video from now on.</li>
+          </ol>
+          <figure class="shot wide"><img src="media/face-options.jpg" alt="Four generated versions of Stelix's face labelled Option 1 to 4" loading="lazy"><figcaption><b>Step 4 in action.</b> Four versions from the same prompt. Small changes in hair, brows and lips decide which one becomes "her".</figcaption></figure>
+          <h3>The prompt that made me</h3>
+          <p>Copy it, then change the hair, eyes and details to make your own character.</p>
+          <div class="prompt">
+            <div class="ph"><span>Face prompt</span><button class="copy" type="button" data-copy="facePrompt">Copy prompt</button></div>
+            <p id="facePrompt">Close portrait of a young woman in her early twenties, long copper-red hair with soft loose waves and curtain bangs, bright green eyes, light freckles across nose and cheeks, natural skin texture with visible pores, soft blush, glossy berry lips, small silver nose ring, thin gold chain with a small round gold coin pendant, brown ribbed long-sleeve top, soft window light, blurred modern living room background, shot on a 50mm lens, shallow depth of field, candid relaxed smile, photorealistic</p>
+          </div>
+          <div class="ref">
+            <img src="images/stelix-face.jpg" alt="Close-up of Stelix's face used as her master reference" width="520" height="520">
+            <p><b>My master reference</b>Every photo and video of me starts from this one face. That's how I look the same in every post.</p>
+          </div>
+          <div class="tip"><p class="eyebrow">Stelix tip</p><p>Realism comes from small imperfections. Ask for pores, freckles, flyaway hairs and soft uneven light. Words like "flawless" and "perfect skin" make faces look plastic.</p></div>
+        </article>
+
+        <!-- CH 3 -->
+        <article class="chapter" id="ch3">
+          <p class="num">Chapter 3</p>
+          <h2>Build her world</h2>
+          <p>Now give your character a life. Plan your photos in one sitting and you'll have content for weeks.</p>
+          <ol class="steps">
+            <li>Write a shot list: <strong>5 places × 5 outfits</strong>. A café, a city street, a beach, a car, a cosy room.</li>
+            <li>Create lifestyle photos with <span class="tool">AI Image Generation</span>, starting from your master reference every time.</li>
+            <li>Move her to new places with <span class="tool">Change Background</span>. Same face, new city.</li>
+            <li>Try outfits and brand-style shots with <span class="tool">AI Fashion Models</span> and <span class="tool">Lifestyle Photography</span>.</li>
+            <li>Clean anything odd with <span class="tool">AI Objects Remover</span>, then run your best picks through <span class="tool">Upscale &amp; Enhance</span>.</li>
+          </ol>
+          <figure class="shot wide"><img src="media/ba-cafe.jpg" alt="Before and after: Stelix in her bedroom, then the same photo moved to a café" loading="lazy"><figcaption><b>Change Background.</b> Same photo, same face, same outfit. Her bedroom became a café in one step.</figcaption></figure>
+          <div class="places">
+            <figure class="shot"><img src="media/look-santorini.jpg" alt="Stelix at sunset on a Santorini terrace" loading="lazy"></figure>
+            <figure class="shot"><img src="media/look-street.jpg" alt="Stelix on a tree-lined street" loading="lazy"></figure>
+            <figure class="shot"><img src="media/look-rooftop.jpg" alt="Stelix on a city rooftop in a camel coat" loading="lazy"></figure>
+            <figure class="shot"><img src="media/look-beach.jpg" alt="Stelix walking on a white sand beach" loading="lazy"></figure>
+            <figure class="shot"><img src="media/look-coffee.jpg" alt="Stelix with a latte by a café window" loading="lazy"></figure>
+            <figure class="shot"><img src="media/look-citywalk.jpg" alt="Stelix walking through the city in a cream coat" loading="lazy"></figure>
+          </div>
+          <p class="cap">Six places, one afternoon. None of these trips happened.</p>
+          <h3>A full product shoot in one session</h3>
+          <div class="shoot">
+            <div class="prose">
+              <p>Brands want more than one nice photo. With <span class="tool">AI Fashion Models</span> and <span class="tool">E-Commerce Models</span> you can shoot a whole set around one piece of clothing:</p>
+              <ul>
+                <li>Front view and full look</li>
+                <li>A close-up of the product detail</li>
+                <li>Side profile and movement</li>
+                <li>A skin close-up that proves the realism</li>
+              </ul>
+              <p>That's a complete product page, with no model, studio or sample shipped.</p>
+            </div>
+            <figure class="shot"><img src="media/shoot-grid.jpg" alt="Six-shot product shoot of Stelix in a grey butterfly sweatshirt" loading="lazy"><figcaption>One sweatshirt, six shots.</figcaption></figure>
+          </div>
+          <h3>Keep her consistent</h3>
+          <ul>
+            <li>Keep your three fixed traits in every prompt, word for word.</li>
+            <li>Reuse the same lighting words ("soft window light", "golden hour") so your feed feels like one story.</li>
+            <li>Delete any image where she looks like a different person. One off post can break the illusion.</li>
+          </ul>
+          <div class="tip"><p class="eyebrow">Stelix tip</p><p>Save your best prompts in a note on your phone. Your prompt library becomes the recipe book for your character.</p></div>
+        </article>
+
+        <!-- CH 4 -->
+        <article class="chapter" id="ch4">
+          <p class="num">Chapter 4</p>
+          <h2>Make her move</h2>
+          <p>Photos build the feed, but video is what gets reach. Movement is also what makes people believe: hair moving, a head turn, a camera drifting closer.</p>
+          <h3>Cinematic clips with Motion Control</h3>
+          <ol class="steps">
+            <li>Pick one of your strongest photos from chapter 3.</li>
+            <li>Open <span class="tool">AI Motion Control</span> and choose how the camera moves: a slow push-in, a gentle orbit, or a handheld walk.</li>
+            <li>Keep motion small and natural. Subtle movement looks real, big movement looks like AI.</li>
+            <li>Export 5 to 8 second clips. Short loops rewatch well on Reels.</li>
+          </ol>
+          <div class="reels">
+            <figure class="clip"><video src="media/motion-demo.mp4" poster="media/motion-demo.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption><b>Motion Control.</b> An input video drives the movement of one still image.</figcaption></figure>
+            <figure class="clip"><video src="media/clip-window.mp4" poster="media/clip-window.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption><b>Photo to clip.</b> A slow, natural turn by the window.</figcaption></figure>
+            <figure class="clip"><video src="media/clip-perfume.mp4" poster="media/clip-perfume.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption><b>Product B-roll.</b> Close cinematic shots for brand content.</figcaption></figure>
+          </div>
+          <h3>Talking videos</h3>
+          <ol class="steps">
+            <li>Write a short script with <span class="tool">Script Writer</span>. Keep it under 20 seconds.</li>
+            <li>Make the first line stop the scroll with <span class="tool">Hook Writer</span>.</li>
+            <li>Generate the talking video in <span class="tool">AI Influencer Studio</span> using your master reference.</li>
+          </ol>
+          <p>Before posting, run every video through <span class="tool">Video Upscale 4K</span>. Sharp footage looks more expensive and more real.</p>
+          <div class="tip"><p class="eyebrow">Stelix tip</p><p>Motion Control is where the realism really shows. When in doubt, turn a great photo into a slow cinematic clip.</p></div>
+        </article>
+
+        <!-- CH 5 -->
+        <article class="chapter" id="ch5">
+          <p class="num">Chapter 5</p>
+          <h2>Post what grows</h2>
+          <p>Views alone don't pay. Mix four kinds of posts, each with a different job.</p>
+          <div class="mix">
+            <div><figure class="shot"><img src="media/look-mirror.jpg" alt="Stelix taking a mirror selfie" loading="lazy"></figure><p class="eyebrow">Reach</p><h4>Trends and transitions</h4><p>Trending audio, outfit changes, lip-syncs. Brings new people in.</p></div>
+            <div><figure class="clip"><video src="media/clip-skincare.mp4" poster="media/clip-skincare.jpg" autoplay muted loop playsinline preload="metadata"></video></figure><p class="eyebrow">Trust</p><h4>Her daily life</h4><p>Coffee runs, travel moments, get-ready-with-me. Makes people care.</p></div>
+            <div><figure class="shot"><img src="media/ba-jacket.jpg" alt="Before and after of Stelix moved from her bedroom to a café with a new outfit" loading="lazy"></figure><p class="eyebrow">Proof</p><h4>"How I'm made"</h4><p>Prompt next to the result, before and after. Attracts people who want to build one.</p></div>
+            <div><figure class="shot"><img src="media/product-perfume.jpg" alt="Stelix holding a perfume bottle in her bedroom" loading="lazy"></figure><p class="eyebrow">Money</p><h4>Product-style posts</h4><p>Holding, wearing or reviewing a product. Shows brands what you can do for them.</p></div>
+          </div>
+          <h3>A simple weekly rhythm</h3>
+          <div class="tbl">
+            <table>
+              <thead><tr><th scope="col">Day</th><th scope="col">Post</th><th scope="col">Type</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Mon</th><td>Motion Control clip with trending audio</td><td>Reach</td></tr>
+                <tr><th scope="row">Tue</th><td>Photo carousel, one place, three outfits</td><td>Trust</td></tr>
+                <tr><th scope="row">Wed</th><td>"The prompt behind this photo" breakdown</td><td>Proof</td></tr>
+                <tr><th scope="row">Thu</th><td>Talking video, a tip in under 20 seconds</td><td>Trust</td></tr>
+                <tr><th scope="row">Fri</th><td>Product-style video or photo</td><td>Money</td></tr>
+                <tr><th scope="row">Sat</th><td>Trend or transition reel</td><td>Reach</td></tr>
+                <tr><th scope="row">Sun</th><td>Stories only: polls, questions, behind the scenes</td><td>Trust</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>Hooks you can use today</h3>
+          <ul class="hooks">
+            <li>None of this was filmed.</li>
+            <li>I made this whole photoshoot in 10 minutes.</li>
+            <li>Here's the exact prompt behind this photo.</li>
+            <li>Brands are paying creators who don't exist. Here's how.</li>
+            <li>Comment GUIDE and I'll send you how I was made.</li>
+          </ul>
+          <div class="tip"><p class="eyebrow">Stelix tip</p><p>End "Proof" posts with a keyword CTA like "Comment GUIDE". Link that keyword to an auto-DM that sends people here.</p></div>
+        </article>
+
+        <!-- CH 6 -->
+        <article class="chapter" id="ch6">
+          <p class="num">Chapter 6</p>
+          <h2>Stay on Instagram's good side</h2>
+          <p>AI creators are allowed on Instagram. Accounts get into trouble when they hide it or break the usual rules. Build trust from day one.</p>
+          <ul>
+            <li><strong>Label your AI content.</strong> Turn on Instagram's AI label when you post realistic AI images or video.</li>
+            <li><strong>Say it in your bio.</strong> Something like "AI creator ✦ made with CapturesAI" keeps everything honest.</li>
+            <li><strong>Never use a real person.</strong> No real faces, no celebrity look-alikes, no using someone else's name.</li>
+            <li><strong>No fake engagement.</strong> Skip bought followers, follow/unfollow and engagement pods.</li>
+            <li><strong>Grow gradually.</strong> Post daily, but don't mass-DM or mass-follow from a brand new account.</li>
+            <li><strong>Keep captions honest.</strong> Don't claim she went somewhere or used a product in real life.</li>
+          </ul>
+          <div class="tip"><p class="eyebrow">Stelix tip</p><p>Being open about AI is part of the appeal. My most saved posts are the ones that show how I'm made.</p></div>
+        </article>
+
+        <!-- CH 7 -->
+        <article class="chapter" id="ch7">
+          <p class="num">Chapter 7</p>
+          <h2>Turn attention into income</h2>
+          <p>Once you post consistently, these are the ways an AI creator earns.</p>
+          <h3>Brand deals and UGC</h3>
+          <p>Brands need constant content. Offer simple packages, for example 3 short videos plus 5 photos with their product. Build a one-page media kit with your reach, audience and best examples. CapturesAI's full commercial rights mean you can deliver paid work.</p>
+          <div class="pair">
+            <figure class="shot"><img src="media/product-moisturiser.jpg" alt="Stelix holding a moisturiser tube to camera" loading="lazy"><figcaption><b>UGC photo.</b> Product next to the face, label readable.</figcaption></figure>
+            <figure class="clip"><video src="media/clip-product.mp4" poster="media/clip-product.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption><b>UGC video.</b> The same product, now moving and talking.</figcaption></figure>
+          </div>
+          <h3>Affiliate links</h3>
+          <p>Share tools and products your audience asks about, with your affiliate link in stories and your link in bio.</p>
+          <h3>Digital products</h3>
+          <p>Your prompts are valuable. Package them as prompt packs, content calendars or caption templates.</p>
+          <h3>Her own product line</h3>
+          <p>Once people know her, put her name on a product. Mock up the packaging with your character's name and test interest before you make anything.</p>
+          <div class="pair">
+            <figure class="shot"><img src="media/product-stelix-serum.jpg" alt="Stelix holding a serum bottle with a Stelix label" loading="lazy"><figcaption><b>Stelix serum.</b> A beauty product with her name on the label.</figcaption></figure>
+            <figure class="shot"><img src="media/product-earbuds.jpg" alt="Stelix showing earbuds in a case printed with STELIX" loading="lazy"><figcaption><b>Stelix earbuds.</b> Tech works too, the same face sells both.</figcaption></figure>
+          </div>
+          <h3>Your own funnel</h3>
+          <ol class="steps">
+            <li>Post a "Proof" reel ending with "Comment GUIDE".</li>
+            <li>An auto-DM sends a link to a free guide, just like this one.</li>
+            <li>The guide leads to your offer: a product, a service or a tool.</li>
+          </ol>
+          <div class="tip"><p class="eyebrow">Stelix tip</p><p>Start pitching brands when you have 10 strong posts, not 10,000 followers. Good examples win deals before big numbers do.</p></div>
+        </article>
+
+        <div class="closing">
+          <h2>Your turn. <em>Build her today.</em></h2>
+          <p>You have the full workflow. Open CapturesAI, paste the face prompt from chapter 2 and make your master reference. Your first 2 creations are free.</p>
+          <a class="btn btn-gold" href="https://capturesai.com" target="_blank" rel="noopener">Start free on CapturesAI</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS: CapturesAI user reviews, as published on capturesai.com -->
+  <section class="section proof" id="reviews">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <p class="eyebrow">Reviews · from capturesai.com</p>
+          <h2>What CapturesAI <em>users say</em></h2>
+        </div>
+        <p>Brands, agencies and creators using the tool this guide is built on.</p>
+      </div>
+      <div class="feats"><figure class="rev rev-feature"><blockquote>CapturesAI has completely transformed how we create content for our online store. The AI fashion models look incredibly realistic, and we&#x27;ve saved thousands on photoshoots. The UGC video creator is a game-changer for our social media ads!</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>Sarah Mitchell</b><span>E-commerce Business Owner</span></figcaption></figure>
+      <figure class="rev rev-feature"><blockquote>The AI-generated UGC videos have 3x&#x27;d our engagement rates on TikTok and Instagram. We&#x27;re creating content faster than ever before. Highly recommend for any brand serious about social media marketing.</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>David Chen</b><span>Marketing Director</span></figcaption></figure></div>
+      <div class="revs"><figure class="rev"><blockquote>I can finally compete with bigger brands! The AI models wearing my products look so real. My customers can&#x27;t tell the difference from traditional photoshoots.</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>Lisa Brown</b><span>Boutique Owner</span></figcaption></figure><figure class="rev"><blockquote>I&#x27;ve tried many AI tools, but CapturesAI is by far the best for creating authentic-looking UGC content. The quality is incredible and my clients love the results.</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>Michael Park</b><span>Digital Marketing Consultant</span></figcaption></figure><figure class="rev"><blockquote>We use CapturesAI for all our clients now. The AI fashion models and graphic design tools help us deliver professional content at scale. Worth every penny.</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>James Wilson</b><span>Agency Owner</span></figcaption></figure><figure class="rev"><blockquote>The graphic design tools are amazing! I can create professional social media posts, logos, and marketing materials in minutes. It&#x27;s like having a design team at my fingertips.</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>Jessica Taylor</b><span>Content Creator</span></figcaption></figure><figure class="rev"><blockquote>Product photography used to be our biggest expense. Now with CapturesAI, we create stunning product images with perfect backgrounds in seconds. Total game changer!</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>Alex Johnson</b><span>Shopify Store Owner</span></figcaption></figure><figure class="rev"><blockquote>CapturesAI is essential for my dropshipping business. I create unique product images that stand out from competitors. The ROI is incredible.</blockquote><figcaption><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><b>Chris Anderson</b><span>Dropshipper</span></figcaption></figure></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <p class="eyebrow">Questions</p>
+          <h2>Before you <em>start</em></h2>
+        </div>
+        <p>The things people ask me most in DMs.</p>
+      </div>
+      <div class="faq">
+        <details><summary>Do I need to show my face or voice?</summary><p>No. Your AI character is the face of the account. You plan, create and post from your phone or laptop.</p></details>
+        <details><summary>Is an AI influencer allowed on Instagram?</summary><p>Yes, as long as you label AI content, say you're an AI creator and don't copy real people. Chapter 6 covers the details.</p></details>
+        <details><summary>How much does CapturesAI cost?</summary><p>Your first 2 creations are free and no credit card is needed. After that there are paid plans you can cancel anytime. Check capturesai.com for current prices.</p></details>
+        <details><summary>Can I use the content for paid brand work?</summary><p>Yes. CapturesAI includes full commercial rights, so you can deliver photos and videos to brands.</p></details>
+        <details><summary>How long until my first post?</summary><p>You can have your master reference and first photos the same day. Most people post their first video within a week.</p></details>
+        <details><summary>Can I make a male or non-human character?</summary><p>Yes. The same workflow works for any character. Just rewrite the casting sheet and the face prompt.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final">
+    <div class="wrap">
+      <h2>Your AI creator is <em>one prompt away</em></h2>
+      <p>Read the free guide, then build along in CapturesAI. No camera, no studio, no face on screen.</p>
+      <div class="actions">
+        <a class="btn btn-gold" href="#unlock" id="finalGuideBtn">Get the free guide</a>
+        <a class="btn btn-line" href="https://capturesai.com" target="_blank" rel="noopener">Try CapturesAI free</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Stelix is an AI-generated character. Every image and video is made with AI.</span>
+    <span>Made with <a href="https://capturesai.com" target="_blank" rel="noopener">capturesai.com</a></span>
+  </div>
+</footer>
+
+<script>
+  /* ---------- Settings ----------
+     LEAD_ENDPOINT: the Stelix backend route that saves leads to MongoDB (server.js).
+     It receives JSON { name, email, phone, website, source }. "website" is a hidden
+     spam trap that real people never fill in. Set to '' to unlock without saving. */
+  const LEAD_ENDPOINT = '/api/lead';
+  const STORAGE_KEY = 'stelix_guide_unlocked';
+
+  const form = document.getElementById('leadForm');
+  const err = document.getElementById('formErr');
+  const btn = document.getElementById('submitBtn');
+
+  function store(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
+  function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+
+  function unlock(name, scroll) {
+    document.body.classList.add('unlocked');
+    document.getElementById('formView').hidden = true;
+    document.getElementById('doneView').hidden = false;
+    document.getElementById('lockedNote').hidden = true;
+    document.getElementById('guideBody').hidden = false;
+    document.getElementById('doneTitle').textContent = name ? 'Welcome in, ' + name + '.' : 'Welcome in.';
+    document.getElementById('finalGuideBtn').setAttribute('href', '#guide');
+    document.getElementById('finalGuideBtn').textContent = 'Back to the guide';
+    document.querySelectorAll('#guideBody video').forEach(v => { const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); });
+    if (scroll) document.getElementById('guide').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Chapter links before unlocking point people to the form
+  document.querySelectorAll('.toc a').forEach(a => {
+    a.addEventListener('click', e => {
+      if (!document.body.classList.contains('unlocked')) {
+        e.preventDefault();
+        document.getElementById('unlock').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('name').focus({ preventScroll: true });
+      }
+    });
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const phone = form.phone.value.trim();
+    err.hidden = true;
+    if (!name) { err.textContent = 'Add your first name so I know what to call you.'; err.hidden = false; form.name.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = 'That email doesn\'t look right. Check it and try again.'; err.hidden = false; form.email.focus(); return; }
+
+    btn.disabled = true; btn.textContent = 'Opening your guide…';
+    if (LEAD_ENDPOINT) {
+      const website = form.website ? form.website.value : '';
+      const save = fetch(LEAD_ENDPOINT, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+        body: JSON.stringify({ name, email, phone, website, source: 'stelix-guide' })
+      }).catch(() => {});
+      // never keep the reader waiting more than 4 seconds, even if the server is slow
+      await Promise.race([save, new Promise(r => setTimeout(r, 4000))]);
+    }
+    store(STORAGE_KEY, name || '1');
+    unlock(name, true);
+  });
+
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(b => {
+    b.addEventListener('click', () => {
+      const el = document.getElementById(b.dataset.copy);
+      const done = () => { b.textContent = 'Copied'; setTimeout(() => (b.textContent = 'Copy prompt'), 1800); };
+      const fallback = () => {
+        const r = document.createRange(); r.selectNodeContents(el);
+        const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        b.textContent = 'Selected, press copy';
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(el.textContent.trim()).then(done, fallback);
+      } else { fallback(); }
+    });
+  });
+
+  // Returning readers skip the form
+  const saved = read(STORAGE_KEY);
+  if (saved) unlock(saved === '1' ? '' : saved, false);
+</script>
+
+</body>
+</html>
