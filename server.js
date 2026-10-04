@@ -8,6 +8,10 @@ const mongoose = require('mongoose');
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || '';
 const ADMIN_KEY = process.env.ADMIN_KEY || '';
+// Optional: Google Sheets web app URL (Apps Script). Leads are added as rows in your sheet.
+const SHEET_WEBHOOK_URL =
+  process.env.SHEET_WEBHOOK_URL ||
+  'https://script.google.com/macros/s/AKfycbyywOe7n4E7v3NQktCccbkhbMGHFX8Hg45PWtRHIw-KnM8tFjqZFO6dMSOzXHlc2rzmPA/exec';
 
 const app = express();
 app.set('trust proxy', 1); // Render sits behind a proxy; needed for the real visitor IP
@@ -68,24 +72,52 @@ app.post('/api/lead', async (req, res) => {
   if (!name) return res.status(400).json({ ok: false, error: 'Name is required.' });
   if (!EMAIL_RE.test(email)) return res.status(400).json({ ok: false, error: 'Email is not valid.' });
 
-  if (mongoose.connection.readyState !== 1) {
-    console.error('Lead not saved, database not connected:', email);
-    return res.status(503).json({ ok: false, error: 'Database not connected.' });
-  }
+  // Save to every place that is set up: MongoDB and/or Google Sheets.
+  const jobs = [];
 
-  try {
+  if (mongoose.connection.readyState === 1) {
     const update = { $set: { name, source, ip: req.ip || '' }, $inc: { signups: 1 } };
     if (phone) update.$set.phone = phone; // keep an older phone if they leave it blank this time
-    await Lead.findOneAndUpdate({ email }, update, { upsert: true, setDefaultsOnInsert: true });
-    return res.json({ ok: true });
-  } catch (err) {
-    console.error('Lead save failed:', err.message);
-    return res.status(500).json({ ok: false, error: 'Could not save. Please try again.' });
+    jobs.push(
+      Lead.findOneAndUpdate({ email }, update, { upsert: true, setDefaultsOnInsert: true })
+        .then(() => 'mongodb')
+    );
   }
+
+  if (SHEET_WEBHOOK_URL) {
+    jobs.push(
+      fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: ADMIN_KEY, name, email, phone, source }),
+        signal: AbortSignal.timeout(10000),
+      })
+        .then((r) => r.text())
+        .then((text) => {
+          if (!text.includes('"ok":true')) throw new Error('Sheet replied: ' + text.slice(0, 120));
+          return 'sheet';
+        })
+    );
+  }
+
+  if (!jobs.length) {
+    console.error('Lead not saved, no database or sheet connected:', email);
+    return res.status(503).json({ ok: false, error: 'Nowhere to save leads yet.' });
+  }
+
+  const results = await Promise.allSettled(jobs);
+  results.filter((r) => r.status === 'rejected').forEach((r) => console.error('Lead save failed:', r.reason && r.reason.message));
+  const saved = results.filter((r) => r.status === 'fulfilled').map((r) => r.value);
+  if (!saved.length) return res.status(500).json({ ok: false, error: 'Could not save. Please try again.' });
+  return res.json({ ok: true, saved });
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ ok: true, database: mongoose.connection.readyState === 1 ? 'connected' : 'not connected' });
+  res.json({
+    ok: true,
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'not connected',
+    googleSheet: SHEET_WEBHOOK_URL ? 'set up' : 'not set up',
+  });
 });
 
 /* ---------- Admin: see your leads ----------
@@ -137,7 +169,8 @@ app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', 'i
 app.listen(PORT, () => console.log(`Stelix funnel running on port ${PORT}`));
 
 if (!MONGODB_URI) {
-  console.warn('MONGODB_URI is not set. The site works, but leads will NOT be saved.');
+  if (SHEET_WEBHOOK_URL) console.log('Saving leads to Google Sheets (MONGODB_URI not set).');
+  else console.warn('Neither MONGODB_URI nor SHEET_WEBHOOK_URL is set. Leads will NOT be saved.');
 } else {
   mongoose
     .connect(MONGODB_URI)

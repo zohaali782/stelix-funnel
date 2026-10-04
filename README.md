@@ -23,6 +23,15 @@ public/          the website (index.html, images/, media/)
 
 `PORT` is set by Render automatically.
 
+## Save leads to Google Sheets instead (no MongoDB needed)
+
+1. Make a new Google Sheet. Open **Extensions > Apps Script**.
+2. Delete what's there, paste everything from `google-sheet-script.js`, and set `SECRET` to your `ADMIN_KEY`. Save.
+3. **Deploy > New deployment**, type **Web app**, Execute as **Me**, Who has access **Anyone**. Deploy and allow access.
+4. Copy the Web app URL (ends with `/exec`) and add it on Render as `SHEET_WEBHOOK_URL`.
+
+New signups then appear as rows in a **Leads** tab. If both MongoDB and the sheet are set, leads go to both.
+
 ## Run on your computer
 
 ```bash
